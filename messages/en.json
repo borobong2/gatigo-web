@@ -1,0 +1,46 @@
+{
+  "Metadata": {
+    "description": "Find a fair place to meet by public-transit travel time.",
+    "title": "GatiGo"
+  },
+  "Home": {
+    "dashboard": "Open demo",
+    "docs": "View on GitHub",
+    "eyebrow": "FAIR COMMUTES / 01",
+    "feature1": "Share a link without making guests install an app",
+    "feature2": "Compare stations by the group’s maximum travel time",
+    "feature3": "Let the host settle on one place to meet",
+    "feature4": "Continue with app notifications and map directions",
+    "signIn": "Sign in",
+    "subtitle": "Gather your friends’ starting stations and suggest a less unfair place to meet.",
+    "title": "Where should everyone meet fairly?"
+  },
+  "Login": {
+    "email": "Email",
+    "emailButton": "Continue with email",
+    "googleButton": "Continue with Google",
+    "password": "Password",
+    "subtitle": "Enable Email or Google in Supabase before using this screen.",
+    "title": "Sign in"
+  },
+  "Dashboard": {
+    "backHome": "Back home",
+    "eyebrow": "AUTHENTICATED ROUTE",
+    "signedIn": "Signed in as {email}.",
+    "subtitle": "Connect Supabase to enable user sessions.",
+    "title": "Your service starts here."
+  },
+  "LocaleSwitcher": {
+    "en": "English",
+    "ko": "한국어"
+  },
+  "Error": {
+    "eyebrow": "SOMETHING WENT WRONG",
+    "retry": "Retry",
+    "title": "Try that again."
+  },
+  "NotFound": {
+    "home": "Go home",
+    "title": "This page does not exist."
+  }
+}

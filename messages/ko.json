@@ -1,0 +1,46 @@
+{
+  "Metadata": {
+    "description": "대중교통 이동시간을 기준으로 공평한 약속 장소를 찾습니다.",
+    "title": "GatiGo"
+  },
+  "Home": {
+    "dashboard": "데모 열기",
+    "docs": "GitHub 보기",
+    "eyebrow": "FAIR COMMUTES / 01",
+    "feature1": "설치 없이 공유 링크에서 출발역 입력",
+    "feature2": "모두의 최대 이동시간을 줄이는 후보 역 비교",
+    "feature3": "주최자가 한 곳을 확정하는 간단한 흐름",
+    "feature4": "앱 푸시와 지도 길찾기로 자연스럽게 이어짐",
+    "signIn": "로그인",
+    "subtitle": "친구들의 출발역을 모아, 모두에게 덜 불공평한 약속 장소를 제안합니다.",
+    "title": "우리, 어디서 만나는 게 가장 공평할까?"
+  },
+  "Login": {
+    "email": "이메일",
+    "emailButton": "이메일로 계속",
+    "googleButton": "Google로 계속",
+    "password": "비밀번호",
+    "subtitle": "이 화면을 사용하기 전에 Supabase에서 Email 또는 Google 제공자를 활성화하세요.",
+    "title": "로그인"
+  },
+  "Dashboard": {
+    "backHome": "홈으로",
+    "eyebrow": "인증된 경로",
+    "signedIn": "{email}(으)로 로그인했습니다.",
+    "subtitle": "Supabase를 연결하면 사용자 세션을 활성화할 수 있습니다.",
+    "title": "서비스는 여기서 시작합니다."
+  },
+  "LocaleSwitcher": {
+    "en": "English",
+    "ko": "한국어"
+  },
+  "Error": {
+    "eyebrow": "문제가 발생했습니다",
+    "retry": "다시 시도",
+    "title": "잠시 후 다시 시도해 주세요."
+  },
+  "NotFound": {
+    "home": "홈으로",
+    "title": "페이지를 찾을 수 없습니다."
+  }
+}
