@@ -45,6 +45,13 @@ describe('getPublicTransitRoute', () => {
       durationSeconds: 1200,
       landingUrl: 'https://map.kakao.com/',
     });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://dapi.kakao.com/v2/routing/publictraffic?start_x=127.02758&start_y=37.49794&end_x=126.92365&end_y=37.55679',
+      {
+        cache: 'no-store',
+        headers: { Authorization: 'KakaoAK test-key' },
+      },
+    );
   });
 
   it('rejects when the server key is missing', async () => {
@@ -78,6 +85,15 @@ describe('getPublicTransitRoute', () => {
         ),
       ),
     );
+
+    await expect(
+      getPublicTransitRoute(gangnam, hongikUniversity),
+    ).rejects.toThrow('Kakao transit is unavailable');
+  });
+
+  it('rejects malformed Kakao responses with a stable error', async () => {
+    vi.stubEnv('KAKAO_REST_API_KEY', 'test-key');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('not json')));
 
     await expect(
       getPublicTransitRoute(gangnam, hongikUniversity),

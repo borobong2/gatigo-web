@@ -1,6 +1,6 @@
 import type { Station } from '../subway/stations';
 
-const PUBLIC_TRAFFIC_URL = 'https://apis-navi.kakaomobility.com/v1/directions';
+const PUBLIC_TRAFFIC_URL = 'https://dapi.kakao.com/v2/routing/publictraffic';
 
 type KakaoRoute = {
   properties?: { totalTime?: number };
@@ -19,8 +19,10 @@ export const getPublicTransitRoute = async (from: Station, to: Station) => {
   if (!key) throw new Error('Kakao transit is not configured');
 
   const params = new URLSearchParams({
-    origin: `${from.longitude},${from.latitude}`,
-    destination: `${to.longitude},${to.latitude}`,
+    start_x: String(from.longitude),
+    start_y: String(from.latitude),
+    end_x: String(to.longitude),
+    end_y: String(to.latitude),
   });
 
   let response: Response;
@@ -35,7 +37,12 @@ export const getPublicTransitRoute = async (from: Station, to: Station) => {
 
   if (!response.ok) throw unavailable();
 
-  const payload = (await response.json()) as KakaoResponse;
+  let payload: KakaoResponse;
+  try {
+    payload = (await response.json()) as KakaoResponse;
+  } catch {
+    throw unavailable();
+  }
   const durationSeconds = Math.min(
     ...(payload.routes ?? [])
       .map((route) => route.properties?.totalTime)
