@@ -9,8 +9,8 @@ describe('toOriginIds', () => {
   });
 
   it('rejects matching station selections', () => {
-    expect(() =>
-      toOriginIds({ first: 'gangnam', second: 'gangnam' }),
-    ).toThrow('서로 다른 출발역');
+    expect(() => toOriginIds({ first: 'gangnam', second: 'gangnam' })).toThrow(
+      '서로 다른 출발역',
+    );
   });
 });

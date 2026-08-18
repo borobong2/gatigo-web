@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getPublicTransitRoute } from '../../../lib/kakao/public-traffic';
 import { rankActualCandidates } from '../../../lib/subway/ranking';
-import { getStation, prefilterMeetingStations } from '../../../lib/subway/stations';
+import {
+  getStation,
+  prefilterMeetingStations,
+} from '../../../lib/subway/stations';
 
 const badRequest = () =>
   NextResponse.json({ error: 'Invalid origin IDs' }, { status: 400 });
@@ -36,14 +39,19 @@ export const POST = async (request: Request) => {
   try {
     const routes = await Promise.all(
       candidates.flatMap((candidate) =>
-        originStations.map((origin) => getPublicTransitRoute(origin, candidate)),
+        originStations.map((origin) =>
+          getPublicTransitRoute(origin, candidate),
+        ),
       ),
     );
 
     return NextResponse.json({
       candidates: rankActualCandidates(
         candidates.map((station, index) => {
-          const pair = routes.slice(index * originStations.length, index * 2 + 2);
+          const pair = routes.slice(
+            index * originStations.length,
+            index * 2 + 2,
+          );
           const durations = pair.map((route) => route.durationSeconds) as [
             number,
             number,

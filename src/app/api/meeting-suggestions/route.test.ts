@@ -100,10 +100,15 @@ describe('POST /api/meeting-suggestions', () => {
     });
     transit.mockReturnValue(route);
 
-    const response = POST(request({ originIds: ['gangnam', 'hongik-university'] }));
+    const response = POST(
+      request({ originIds: ['gangnam', 'hongik-university'] }),
+    );
 
     await vi.waitFor(() => expect(transit).toHaveBeenCalledTimes(6));
-    resolveRoute({ durationSeconds: 600, landingUrl: 'https://map.kakao.com/' });
+    resolveRoute({
+      durationSeconds: 600,
+      landingUrl: 'https://map.kakao.com/',
+    });
     await expect(response).resolves.toHaveProperty('status', 200);
   });
 
@@ -129,9 +134,7 @@ describe('POST /api/meeting-suggestions', () => {
   });
 
   it('returns 400 for an unknown origin ID', async () => {
-    const response = await POST(
-      request({ originIds: ['gangnam', 'unknown'] }),
-    );
+    const response = await POST(request({ originIds: ['gangnam', 'unknown'] }));
 
     expect(response.status).toBe(400);
   });

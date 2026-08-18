@@ -74,7 +74,10 @@ const MeetingForm = () => {
         </p>
       </div>
       <form className="mt-8 grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
-        <label className="grid gap-2 text-sm font-medium" htmlFor="first-station">
+        <label
+          className="grid gap-2 text-sm font-medium"
+          htmlFor="first-station"
+        >
           첫 번째 사람 출발역
           <select
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
@@ -89,7 +92,10 @@ const MeetingForm = () => {
             ))}
           </select>
         </label>
-        <label className="grid gap-2 text-sm font-medium" htmlFor="second-station">
+        <label
+          className="grid gap-2 text-sm font-medium"
+          htmlFor="second-station"
+        >
           두 번째 사람 출발역
           <select
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
@@ -127,8 +133,8 @@ const MeetingForm = () => {
                 <div>
                   <h3 className="font-medium">{candidate.station.name}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    첫 번째 사람 {Math.round(candidate.durations[0] / 60)}분 · 두 번째 사람{' '}
-                    {Math.round(candidate.durations[1] / 60)}분
+                    첫 번째 사람 {Math.round(candidate.durations[0] / 60)}분 ·
+                    두 번째 사람 {Math.round(candidate.durations[1] / 60)}분
                   </p>
                 </div>
                 <a

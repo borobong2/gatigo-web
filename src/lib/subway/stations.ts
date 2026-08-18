@@ -60,9 +60,7 @@ export const prefilterMeetingStations = (
 
   const [firstDistances, secondDistances] = originIds.map(distancesFrom);
 
-  return STATIONS.filter(
-    (station) => !originIds.includes(station.id),
-  )
+  return STATIONS.filter((station) => !originIds.includes(station.id))
     .sort(
       (a, b) =>
         Math.max(firstDistances.get(a.id)!, secondDistances.get(a.id)!) -

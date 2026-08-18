@@ -64,7 +64,10 @@ describe('getPublicTransitRoute', () => {
 
   it('rejects when Kakao responds with an HTTP error', async () => {
     vi.stubEnv('KAKAO_REST_API_KEY', 'test-key');
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 500 })));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(new Response(null, { status: 500 })),
+    );
 
     await expect(
       getPublicTransitRoute(gangnam, hongikUniversity),
