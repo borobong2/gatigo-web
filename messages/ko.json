@@ -15,6 +15,38 @@
     "subtitle": "친구들의 출발역을 모아, 모두에게 덜 불공평한 약속 장소를 제안합니다.",
     "title": "우리, 어디서 만나는 게 가장 공평할까?"
   },
+  "Meeting": {
+    "duration": "{person}번째 사람 {minutes}분",
+    "errors": {
+      "generic": "추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
+      "invalidOrigins": "서로 다른 출발역 두 곳을 목록에서 선택해 주세요.",
+      "rateLimited": "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+      "upstream": "대중교통 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."
+    },
+    "firstOrigin": "첫 번째 사람 출발역",
+    "loading": "추천 찾는 중…",
+    "mapLink": "카카오맵에서 길찾기",
+    "searchPlaceholder": "역 이름 검색",
+    "secondOrigin": "두 번째 사람 출발역",
+    "stations": {
+      "city-hall": "시청역",
+      "euljiro-3ga": "을지로3가역",
+      "express-bus-terminal": "고속터미널역",
+      "gangnam": "강남역",
+      "hongik-university": "홍대입구역",
+      "jamsil": "잠실역",
+      "konkuk-university": "건대입구역",
+      "sadang": "사당역",
+      "seoul": "서울역",
+      "sindorim": "신도림역",
+      "wangsimni": "왕십리역",
+      "yeouido": "여의도역"
+    },
+    "submit": "만남역 추천받기",
+    "subtitle": "두 사람의 출발역을 고르면 중간 만남역을 추천해 드릴게요.",
+    "suggestionsTitle": "추천 만남역",
+    "title": "어디서 만날까요?"
+  },
   "Login": {
     "email": "이메일",
     "emailButton": "이메일로 계속",

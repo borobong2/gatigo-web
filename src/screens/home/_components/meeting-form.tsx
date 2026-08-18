@@ -1,8 +1,14 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { stationOptions, toOriginIds } from '../_constants/stations';
+import { Input } from '@/components/ui/input';
+import {
+  resolveStationId,
+  toOriginIds,
+  type StationOption,
+} from '../_constants/stations';
 
 type Candidate = {
   station: { id: string; name: string };
@@ -10,55 +16,85 @@ type Candidate = {
   landingUrl: string;
 };
 
-const errorMessage = (status: number) =>
-  status === 400
-    ? '출발역을 확인해 주세요.'
-    : status === 502
-      ? '대중교통 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
-      : '추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.';
+type MeetingFormProps = { stationOptions: readonly StationOption[] };
 
-const MeetingForm = () => {
-  const [first, setFirst] = useState('gangnam');
-  const [second, setSecond] = useState('hongik-university');
+const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
+  const t = useTranslations('Meeting');
+  const [first, setFirst] = useState(stationOptions[0]?.name ?? '');
+  const [second, setSecond] = useState(stationOptions[1]?.name ?? '');
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const requestRef = useRef<AbortController | null>(null);
+
+  const updateSelection = (
+    value: string,
+    setValue: (value: string) => void,
+  ) => {
+    requestRef.current?.abort();
+    requestRef.current = null;
+    setValue(value);
+    setCandidates([]);
+    setError('');
+    setIsLoading(false);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    requestRef.current?.abort();
+    requestRef.current = null;
+    setCandidates([]);
     setError('');
 
     let originIds: [string, string];
     try {
-      originIds = toOriginIds({ first, second });
-    } catch (requestError) {
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : '추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.',
-      );
+      originIds = toOriginIds({
+        first: resolveStationId(first, stationOptions) ?? '',
+        second: resolveStationId(second, stationOptions) ?? '',
+      });
+    } catch {
+      setIsLoading(false);
+      setError(t('errors.invalidOrigins'));
       return;
     }
 
+    const controller = new AbortController();
+    requestRef.current = controller;
     setIsLoading(true);
     try {
       const response = await fetch('/api/meeting-suggestions', {
         body: JSON.stringify({ originIds }),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
+        signal: controller.signal,
       });
 
-      if (!response.ok) throw new Error(errorMessage(response.status));
+      if (!response.ok) {
+        const key =
+          response.status === 400
+            ? 'errors.invalidOrigins'
+            : response.status === 429
+              ? 'errors.rateLimited'
+              : response.status === 502
+                ? 'errors.upstream'
+                : 'errors.generic';
+        throw new Error(t(key));
+      }
       const data = (await response.json()) as { candidates: Candidate[] };
-      setCandidates(data.candidates);
+      if (requestRef.current === controller) setCandidates(data.candidates);
     } catch (requestError) {
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : '추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.',
-      );
+      if (!controller.signal.aborted && requestRef.current === controller) {
+        setError(
+          requestError instanceof Error
+            ? requestError.message
+            : t('errors.generic'),
+        );
+      }
     } finally {
-      setIsLoading(false);
+      if (requestRef.current === controller) {
+        requestRef.current = null;
+        setIsLoading(false);
+      }
     }
   };
 
@@ -67,51 +103,50 @@ const MeetingForm = () => {
       <div>
         <p className="text-sm font-medium text-primary">GatiGo</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-          어디서 만날까요?
+          {t('title')}
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          두 사람의 출발역을 고르면 중간 만남역을 추천해 드릴게요.
-        </p>
+        <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
       </div>
       <form className="mt-8 grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
         <label
           className="grid gap-2 text-sm font-medium"
           htmlFor="first-station"
         >
-          첫 번째 사람 출발역
-          <select
-            className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+          {t('firstOrigin')}
+          <Input
+            autoComplete="off"
             id="first-station"
-            onChange={(event) => setFirst(event.target.value)}
+            list="station-options"
+            onChange={(event) => updateSelection(event.target.value, setFirst)}
+            placeholder={t('searchPlaceholder')}
+            required
+            type="search"
             value={first}
-          >
-            {stationOptions.map((station) => (
-              <option key={station.id} value={station.id}>
-                {station.name}
-              </option>
-            ))}
-          </select>
+          />
         </label>
         <label
           className="grid gap-2 text-sm font-medium"
           htmlFor="second-station"
         >
-          두 번째 사람 출발역
-          <select
-            className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+          {t('secondOrigin')}
+          <Input
+            autoComplete="off"
             id="second-station"
-            onChange={(event) => setSecond(event.target.value)}
+            list="station-options"
+            onChange={(event) => updateSelection(event.target.value, setSecond)}
+            placeholder={t('searchPlaceholder')}
+            required
+            type="search"
             value={second}
-          >
-            {stationOptions.map((station) => (
-              <option key={station.id} value={station.id}>
-                {station.name}
-              </option>
-            ))}
-          </select>
+          />
         </label>
+        <datalist id="station-options">
+          {stationOptions.map((station) => (
+            <option key={station.id} value={station.name} />
+          ))}
+        </datalist>
         <Button className="sm:col-span-2" disabled={isLoading} type="submit">
-          {isLoading ? '추천 찾는 중…' : '만남역 추천받기'}
+          {isLoading ? t('loading') : t('submit')}
         </Button>
       </form>
       {error && (
@@ -122,7 +157,7 @@ const MeetingForm = () => {
       {candidates.length > 0 && (
         <section aria-labelledby="suggestions-title" className="mt-8">
           <h2 className="text-lg font-semibold" id="suggestions-title">
-            추천 만남역
+            {t('suggestionsTitle')}
           </h2>
           <div className="mt-3 grid gap-3">
             {candidates.map((candidate) => (
@@ -131,10 +166,21 @@ const MeetingForm = () => {
                 key={candidate.station.id}
               >
                 <div>
-                  <h3 className="font-medium">{candidate.station.name}</h3>
+                  <h3 className="font-medium">
+                    {stationOptions.find(
+                      (station) => station.id === candidate.station.id,
+                    )?.name ?? candidate.station.name}
+                  </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    첫 번째 사람 {Math.round(candidate.durations[0] / 60)}분 ·
-                    두 번째 사람 {Math.round(candidate.durations[1] / 60)}분
+                    {t('duration', {
+                      minutes: Math.round(candidate.durations[0] / 60),
+                      person: 1,
+                    })}{' '}
+                    ·{' '}
+                    {t('duration', {
+                      minutes: Math.round(candidate.durations[1] / 60),
+                      person: 2,
+                    })}
                   </p>
                 </div>
                 <a
@@ -143,7 +189,7 @@ const MeetingForm = () => {
                   rel="noreferrer"
                   target="_blank"
                 >
-                  카카오맵에서 길찾기
+                  {t('mapLink')}
                 </a>
               </article>
             ))}
@@ -152,6 +198,11 @@ const MeetingForm = () => {
       )}
     </section>
   );
+};
+
+const MeetingForm = (props: MeetingFormProps) => {
+  const locale = useLocale();
+  return <MeetingFormFields key={locale} {...props} />;
 };
 
 export default MeetingForm;

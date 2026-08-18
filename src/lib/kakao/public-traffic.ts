@@ -1,6 +1,7 @@
 import type { Station } from '../subway/stations';
 
 const PUBLIC_TRAFFIC_URL = 'https://dapi.kakao.com/v2/routing/publictraffic';
+const REQUEST_TIMEOUT_MS = 5_000;
 
 type KakaoRoute = {
   properties?: { totalTime?: number };
@@ -13,6 +14,21 @@ type KakaoResponse = {
 };
 
 const unavailable = () => new Error('Kakao transit is unavailable');
+
+const isSafeLandingUrl = (value: unknown): value is string => {
+  if (typeof value !== 'string') return false;
+
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      (url.hostname === 'map.kakao.com' ||
+        url.hostname.endsWith('.map.kakao.com'))
+    );
+  } catch {
+    return false;
+  }
+};
 
 export const getPublicTransitRoute = async (from: Station, to: Station) => {
   const key = process.env.KAKAO_REST_API_KEY;
@@ -30,6 +46,7 @@ export const getPublicTransitRoute = async (from: Station, to: Station) => {
     response = await fetch(`${PUBLIC_TRAFFIC_URL}?${params}`, {
       cache: 'no-store',
       headers: { Authorization: `KakaoAK ${key}` },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
   } catch {
     throw unavailable();
@@ -52,7 +69,7 @@ export const getPublicTransitRoute = async (from: Station, to: Station) => {
   if (
     payload.status !== 'OK' ||
     !Number.isFinite(durationSeconds) ||
-    !payload.properties?.landingURL
+    !isSafeLandingUrl(payload.properties?.landingURL)
   ) {
     throw unavailable();
   }

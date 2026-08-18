@@ -50,8 +50,58 @@ describe('getPublicTransitRoute', () => {
       {
         cache: 'no-store',
         headers: { Authorization: 'KakaoAK test-key' },
+        signal: expect.any(AbortSignal),
       },
     );
+  });
+
+  it('accepts Kakao map subdomain landing URLs', async () => {
+    vi.stubEnv('KAKAO_REST_API_KEY', 'test-key');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            status: 'OK',
+            properties: {
+              landingURL: 'https://place.map.kakao.com/123?ref=route',
+            },
+            routes: [{ properties: { totalTime: 1200 } }],
+          }),
+        ),
+      ),
+    );
+
+    await expect(
+      getPublicTransitRoute(gangnam, hongikUniversity),
+    ).resolves.toMatchObject({
+      landingUrl: 'https://place.map.kakao.com/123?ref=route',
+    });
+  });
+
+  it.each([
+    'http://map.kakao.com/route',
+    'https://map.kakao.com.evil.example/route',
+    'https://example.com/route',
+    'not-a-url',
+  ])('rejects unsafe landing URL %s', async (landingURL) => {
+    vi.stubEnv('KAKAO_REST_API_KEY', 'test-key');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            status: 'OK',
+            properties: { landingURL },
+            routes: [{ properties: { totalTime: 1200 } }],
+          }),
+        ),
+      ),
+    );
+
+    await expect(
+      getPublicTransitRoute(gangnam, hongikUniversity),
+    ).rejects.toThrow('Kakao transit is unavailable');
   });
 
   it('rejects when the server key is missing', async () => {

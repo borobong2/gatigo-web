@@ -21,14 +21,50 @@ const STATIONS: readonly Station[] = [
   },
   { id: 'city-hall', name: '시청역', longitude: 126.97712, latitude: 37.56583 },
   { id: 'seoul', name: '서울역', longitude: 126.9726, latitude: 37.55468 },
+  { id: 'jamsil', name: '잠실역', longitude: 127.10015, latitude: 37.51326 },
+  { id: 'sadang', name: '사당역', longitude: 126.98163, latitude: 37.47653 },
+  {
+    id: 'express-bus-terminal',
+    name: '고속터미널역',
+    longitude: 127.00481,
+    latitude: 37.50481,
+  },
+  { id: 'yeouido', name: '여의도역', longitude: 126.92404, latitude: 37.52162 },
+  {
+    id: 'wangsimni',
+    name: '왕십리역',
+    longitude: 127.0371,
+    latitude: 37.56122,
+  },
+  {
+    id: 'konkuk-university',
+    name: '건대입구역',
+    longitude: 127.0692,
+    latitude: 37.54037,
+  },
+  {
+    id: 'sindorim',
+    name: '신도림역',
+    longitude: 126.89105,
+    latitude: 37.50881,
+  },
 ];
 
+export const stationIds = STATIONS.map((station) => station.id);
+
 const STATION_GRAPH: Readonly<Record<string, readonly string[]>> = {
-  gangnam: ['euljiro-3ga'],
-  'hongik-university': ['city-hall'],
-  'euljiro-3ga': ['gangnam', 'seoul'],
-  'city-hall': ['hongik-university', 'seoul'],
-  seoul: ['euljiro-3ga', 'city-hall'],
+  gangnam: ['euljiro-3ga', 'express-bus-terminal', 'jamsil', 'sadang'],
+  'hongik-university': ['city-hall', 'sindorim', 'yeouido'],
+  'euljiro-3ga': ['city-hall', 'gangnam', 'seoul', 'wangsimni'],
+  'city-hall': ['euljiro-3ga', 'hongik-university', 'seoul'],
+  seoul: ['city-hall', 'euljiro-3ga', 'sadang'],
+  jamsil: ['gangnam', 'konkuk-university'],
+  sadang: ['express-bus-terminal', 'gangnam', 'seoul', 'sindorim'],
+  'express-bus-terminal': ['gangnam', 'sadang', 'yeouido'],
+  yeouido: ['express-bus-terminal', 'hongik-university', 'sindorim'],
+  wangsimni: ['euljiro-3ga', 'konkuk-university'],
+  'konkuk-university': ['jamsil', 'wangsimni'],
+  sindorim: ['hongik-university', 'sadang', 'yeouido'],
 };
 
 export const getStation = (id: string) =>

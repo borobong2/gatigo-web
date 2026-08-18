@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { toOriginIds } from './stations';
+import { resolveStationId, toOriginIds } from './stations';
+
+const options = [
+  { id: 'gangnam', name: 'Gangnam Station' },
+  { id: 'hongik-university', name: 'Hongik University Station' },
+];
 
 describe('toOriginIds', () => {
   it('returns two distinct selected station IDs', () => {
@@ -10,7 +15,12 @@ describe('toOriginIds', () => {
 
   it('rejects matching station selections', () => {
     expect(() => toOriginIds({ first: 'gangnam', second: 'gangnam' })).toThrow(
-      '서로 다른 출발역',
+      'Invalid origins',
     );
+  });
+
+  it('resolves a localized station name selected from a search list', () => {
+    expect(resolveStationId('Gangnam Station', options)).toBe('gangnam');
+    expect(resolveStationId('Unknown Station', options)).toBeUndefined();
   });
 });

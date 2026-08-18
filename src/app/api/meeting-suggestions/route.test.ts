@@ -8,14 +8,18 @@ vi.mock('../../../lib/kakao/public-traffic', () => ({
 
 const transit = vi.mocked(getPublicTransitRoute);
 
-const request = (body: unknown) =>
+let requestId = 0;
+
+const request = (body: unknown, ip = `198.51.100.${++requestId}`) =>
   new Request('http://localhost/api/meeting-suggestions', {
     method: 'POST',
     body: JSON.stringify(body),
+    headers: { 'x-forwarded-for': ip },
   });
 
 afterEach(() => {
   vi.clearAllMocks();
+  vi.useRealTimers();
 });
 
 describe('POST /api/meeting-suggestions', () => {
@@ -26,7 +30,7 @@ describe('POST /api/meeting-suggestions', () => {
           ? origin.id === 'gangnam'
             ? 300
             : 500
-          : candidate.id === 'seoul'
+          : candidate.id === 'euljiro-3ga'
             ? origin.id === 'gangnam'
               ? 600
               : 700
@@ -61,27 +65,27 @@ describe('POST /api/meeting-suggestions', () => {
         },
         {
           station: {
-            id: 'seoul',
-            name: '서울역',
-            longitude: 126.9726,
-            latitude: 37.55468,
-          },
-          durations: [600, 700],
-          maxSeconds: 700,
-          totalSeconds: 1300,
-          landingUrl: 'https://map.kakao.com/seoul',
-        },
-        {
-          station: {
             id: 'euljiro-3ga',
             name: '을지로3가역',
             longitude: 126.99195,
             latitude: 37.5663,
           },
+          durations: [600, 700],
+          maxSeconds: 700,
+          totalSeconds: 1300,
+          landingUrl: 'https://map.kakao.com/euljiro-3ga',
+        },
+        {
+          station: {
+            id: 'express-bus-terminal',
+            name: '고속터미널역',
+            longitude: 127.00481,
+            latitude: 37.50481,
+          },
           durations: [400, 1100],
           maxSeconds: 1100,
           totalSeconds: 1500,
-          landingUrl: 'https://map.kakao.com/euljiro-3ga',
+          landingUrl: 'https://map.kakao.com/express-bus-terminal',
         },
       ],
     });
@@ -147,5 +151,43 @@ describe('POST /api/meeting-suggestions', () => {
     );
 
     expect(response.status).toBe(502);
+  });
+
+  it('limits each IP before starting more Kakao requests', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-08-19T00:00:00Z'));
+    transit.mockResolvedValue({
+      durationSeconds: 600,
+      landingUrl: 'https://map.kakao.com/',
+    });
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      const response = await POST(
+        request(
+          { originIds: ['gangnam', 'hongik-university'] },
+          '203.0.113.10',
+        ),
+      );
+      expect(response.status).toBe(200);
+    }
+
+    const limited = await POST(
+      request({ originIds: ['gangnam', 'hongik-university'] }, '203.0.113.10'),
+    );
+    const otherIp = await POST(
+      request({ originIds: ['gangnam', 'hongik-university'] }, '203.0.113.11'),
+    );
+    vi.advanceTimersByTime(60_000);
+    const reset = await POST(
+      request({ originIds: ['gangnam', 'hongik-university'] }, '203.0.113.10'),
+    );
+
+    expect(limited.status).toBe(429);
+    await expect(limited.json()).resolves.toEqual({
+      error: 'Too many requests',
+    });
+    expect(otherIp.status).toBe(200);
+    expect(reset.status).toBe(200);
+    expect(transit).toHaveBeenCalledTimes(72);
   });
 });
