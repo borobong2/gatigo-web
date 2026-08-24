@@ -7,8 +7,8 @@ the native GatiGo shell.
 ## Local setup
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ## Meeting suggestions local smoke test
@@ -18,7 +18,7 @@ REST API key, keep it local, and start the app with it available only to the
 server:
 
 ```bash
-KAKAO_REST_API_KEY=... npm run dev
+KAKAO_REST_API_KEY=... pnpm dev
 ```
 
 In a second terminal, run the live smoke request:
@@ -44,9 +44,9 @@ share-link flow needs persisted rooms and responses.
 ## Checks
 
 ```bash
-npm test
-npm run lint
-npm run typecheck
-npm run format:check
-npm run build
+pnpm test
+pnpm lint
+pnpm typecheck
+pnpm format:check
+pnpm build
 ```
