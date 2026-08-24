@@ -6,6 +6,7 @@
 - branch: feat/issue-1-static-network
 - worktree: /Users/bong/github/workspaces/gatigo-web/issue-1-static-network
 - last commit: bbe8c67 docs: redefine meeting station ranking
+- metric: 정적 기본 운행시간(분) + 환승 3분 패널티
 
 ## Retry
 
