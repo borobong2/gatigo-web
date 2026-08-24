@@ -7,6 +7,7 @@
 - worktree: /Users/bong/github/workspaces/gatigo-web/issue-1-static-network
 - last commit: 6eb2bdd docs: use static travel time ranking
 - metric: 정적 기본 운행시간(분) + 환승 3분 패널티
+- current task: T1 정적 네트워크 데이터
 
 ## Retry
 
