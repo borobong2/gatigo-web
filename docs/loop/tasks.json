@@ -1,0 +1,23 @@
+{
+  "issue": 1,
+  "terminal": false,
+  "tasks": [
+    {
+      "id": "T1",
+      "status": "done",
+      "evidence": ["ad1a07b", "src/lib/subway/static-network.test.ts"]
+    },
+    {
+      "id": "T2",
+      "status": "done",
+      "evidence": [
+        "d98d759",
+        "c4934fb",
+        "src/lib/subway/static-recommendations.test.ts"
+      ]
+    },
+    { "id": "T3", "status": "done", "evidence": ["f7e73bf"] },
+    { "id": "T4", "status": "done", "evidence": ["4284de5"] },
+    { "id": "T5", "status": "active", "evidence": [] }
+  ]
+}

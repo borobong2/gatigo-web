@@ -1,28 +1,4 @@
 # Loop State
 
-## Current
-
-- issue: #1 출발역 두 개로 만날 곳 추천받기
-- branch: feat/issue-1-static-network
-- worktree: /Users/bong/github/workspaces/gatigo-web/issue-1-static-network
-- last commit: 6eb2bdd docs: use static travel time ranking
-- metric: 정적 기본 운행시간(분) + 환승 3분 패널티
-- current task: T1 정적 네트워크 데이터
-
-## Retry
-
-- attempt: 0/2
-- last failed check: none
-- last failure summary: none
-
-## Verified
-
-- checks: not run
-- Preview/API check: not applicable; this issue must make zero external API calls
-
-## Next
-
-- Ready issue: #1
-- blocker: none; 제공받은 `전체_도시철도운행정보_20260228.xlsx`의 무결성과
-  정거장 순서·정적 도착/출발 시각 필드를 확인했다. 정규화 진행 중.
-- scope note: GTX-A는 제공 원본에 없어 이번 정적 네트워크에서 제외한다.
+The machine-readable source of truth is `docs/loop/tasks.json`.
+Run `node scripts/loop-status.mjs` before starting or completing a task.
