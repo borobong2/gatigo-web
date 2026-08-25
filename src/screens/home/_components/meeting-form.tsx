@@ -105,6 +105,7 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
           <label
             className="grid gap-2 text-sm font-medium"
             htmlFor={`station-${index}`}
+            key={`origin-${index}`}
           >
             {index === 0
               ? t('firstOrigin')
