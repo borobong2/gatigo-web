@@ -22,4 +22,17 @@ describe('recommendStaticMeetingStations', () => {
       true,
     );
   });
+
+  it('supports three origins with one duration per person', () => {
+    const candidates = recommendStaticMeetingStations([
+      '강남역',
+      '홍대입구역',
+      '잠실역',
+    ]);
+
+    expect(candidates).toHaveLength(3);
+    expect(candidates.every((candidate) => candidate.durations.length === 3)).toBe(
+      true,
+    );
+  });
 });
