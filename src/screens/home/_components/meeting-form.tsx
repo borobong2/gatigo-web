@@ -11,9 +11,10 @@ import {
 } from '../_constants/stations';
 
 type Candidate = {
-  station: { id: string; name: string };
-  durations: [number, number];
-  landingUrl: string;
+  name: string;
+  durations: number[];
+  worstMinutes: number;
+  totalMinutes: number;
 };
 
 type MeetingFormProps = { stationOptions: readonly StationOption[] };
@@ -46,9 +47,9 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
     setCandidates([]);
     setError('');
 
-    let originIds: [string, string];
+    let originNames: [string, string];
     try {
-      originIds = toOriginIds({
+      originNames = toOriginIds({
         first: resolveStationId(first, stationOptions) ?? '',
         second: resolveStationId(second, stationOptions) ?? '',
       });
@@ -63,7 +64,7 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/meeting-suggestions', {
-        body: JSON.stringify({ originIds }),
+        body: JSON.stringify({ originNames }),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         signal: controller.signal,
@@ -72,12 +73,8 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
       if (!response.ok) {
         const key =
           response.status === 400
-            ? 'errors.invalidOrigins'
-            : response.status === 429
-              ? 'errors.rateLimited'
-              : response.status === 502
-                ? 'errors.upstream'
-                : 'errors.generic';
+              ? 'errors.invalidOrigins'
+              : 'errors.generic';
         throw new Error(t(key));
       }
       const data = (await response.json()) as { candidates: Candidate[] };
@@ -163,34 +160,23 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
             {candidates.map((candidate) => (
               <article
                 className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border p-4"
-                key={candidate.station.id}
+                key={candidate.name}
               >
                 <div>
                   <h3 className="font-medium">
-                    {stationOptions.find(
-                      (station) => station.id === candidate.station.id,
-                    )?.name ?? candidate.station.name}
+                  {candidate.name}역
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {t('duration', {
-                      minutes: Math.round(candidate.durations[0] / 60),
-                      person: 1,
-                    })}{' '}
-                    ·{' '}
-                    {t('duration', {
-                      minutes: Math.round(candidate.durations[1] / 60),
-                      person: 2,
-                    })}
+                    {candidate.durations
+                      .map((minutes, index) =>
+                        t('duration', { minutes, person: index + 1 }),
+                      )
+                      .join(' · ')}
                   </p>
                 </div>
-                <a
-                  className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-                  href={candidate.landingUrl}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {t('mapLink')}
-                </a>
+                <p className="text-sm text-muted-foreground">
+                  최대 {candidate.worstMinutes}분 · 합계 {candidate.totalMinutes}분
+                </p>
               </article>
             ))}
           </div>

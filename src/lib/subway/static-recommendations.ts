@@ -3,6 +3,10 @@ import { STATIC_NETWORK, STATIC_STATIONS } from './static-network';
 
 const normalizedName = (name: string) => name.trim().replace(/역$/, '');
 
+export const staticStationNames = [
+  ...new Set(STATIC_STATIONS.map((station) => station.name)),
+].sort((a, b) => a.localeCompare(b, 'ko'));
+
 export const getStaticStationNodes = (name: string) => {
   const normalized = normalizedName(name);
   return STATIC_STATIONS.filter((station) => station.name === normalized).map(
@@ -22,7 +26,7 @@ export const recommendStaticMeetingStations = (originNames: readonly string[]) =
   const distances = origins.map((origin) =>
     shortestTravelTimesFrom(STATIC_NETWORK, origin.nodes),
   );
-  const names = [...new Set(STATIC_STATIONS.map((station) => station.name))];
+  const names = staticStationNames;
 
   return names
     .filter((name) => !origins.some((origin) => origin.name === name))
