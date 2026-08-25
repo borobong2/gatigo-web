@@ -4,11 +4,7 @@ import { useRef, useState, type FormEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  resolveStationId,
-  toOriginIds,
-  type StationOption,
-} from '../_constants/stations';
+import { resolveStationId, type StationOption } from '../_constants/stations';
 
 type Candidate = {
   name: string;
@@ -21,20 +17,21 @@ type MeetingFormProps = { stationOptions: readonly StationOption[] };
 
 const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
   const t = useTranslations('Meeting');
-  const [first, setFirst] = useState(stationOptions[0]?.name ?? '');
-  const [second, setSecond] = useState(stationOptions[1]?.name ?? '');
+  const [origins, setOrigins] = useState([
+    stationOptions[0]?.name ?? '',
+    stationOptions[1]?.name ?? '',
+  ]);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const requestRef = useRef<AbortController | null>(null);
 
-  const updateSelection = (
-    value: string,
-    setValue: (value: string) => void,
-  ) => {
+  const updateSelection = (value: string, index: number) => {
     requestRef.current?.abort();
     requestRef.current = null;
-    setValue(value);
+    setOrigins((current) =>
+      current.map((origin, i) => (i === index ? value : origin)),
+    );
     setCandidates([]);
     setError('');
     setIsLoading(false);
@@ -47,13 +44,14 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
     setCandidates([]);
     setError('');
 
-    let originNames: [string, string];
-    try {
-      originNames = toOriginIds({
-        first: resolveStationId(first, stationOptions) ?? '',
-        second: resolveStationId(second, stationOptions) ?? '',
-      });
-    } catch {
+    const originNames = origins.map(
+      (origin) => resolveStationId(origin, stationOptions) ?? '',
+    );
+    if (
+      originNames.length < 2 ||
+      originNames.some((name) => !name) ||
+      new Set(originNames).size !== originNames.length
+    ) {
       setIsLoading(false);
       setError(t('errors.invalidOrigins'));
       return;
@@ -72,9 +70,7 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
 
       if (!response.ok) {
         const key =
-          response.status === 400
-              ? 'errors.invalidOrigins'
-              : 'errors.generic';
+          response.status === 400 ? 'errors.invalidOrigins' : 'errors.generic';
         throw new Error(t(key));
       }
       const data = (await response.json()) as { candidates: Candidate[] };
@@ -105,38 +101,35 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
         <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
       </div>
       <form className="mt-8 grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
-        <label
-          className="grid gap-2 text-sm font-medium"
-          htmlFor="first-station"
+        {origins.map((origin, index) => (
+          <label
+            className="grid gap-2 text-sm font-medium"
+            htmlFor={`station-${index}`}
+          >
+            {index === 0
+              ? t('firstOrigin')
+              : index === 1
+                ? t('secondOrigin')
+                : `${index + 1}번째 사람 출발역`}
+            <Input
+              autoComplete="off"
+              id={`station-${index}`}
+              list="station-options"
+              onChange={(event) => updateSelection(event.target.value, index)}
+              placeholder={t('searchPlaceholder')}
+              required
+              type="search"
+              value={origin}
+            />
+          </label>
+        ))}
+        <Button
+          className="sm:col-span-2"
+          onClick={() => setOrigins((current) => [...current, ''])}
+          type="button"
         >
-          {t('firstOrigin')}
-          <Input
-            autoComplete="off"
-            id="first-station"
-            list="station-options"
-            onChange={(event) => updateSelection(event.target.value, setFirst)}
-            placeholder={t('searchPlaceholder')}
-            required
-            type="search"
-            value={first}
-          />
-        </label>
-        <label
-          className="grid gap-2 text-sm font-medium"
-          htmlFor="second-station"
-        >
-          {t('secondOrigin')}
-          <Input
-            autoComplete="off"
-            id="second-station"
-            list="station-options"
-            onChange={(event) => updateSelection(event.target.value, setSecond)}
-            placeholder={t('searchPlaceholder')}
-            required
-            type="search"
-            value={second}
-          />
-        </label>
+          사람 추가
+        </Button>
         <datalist id="station-options">
           {stationOptions.map((station) => (
             <option key={station.id} value={station.name} />
@@ -163,9 +156,7 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
                 key={candidate.name}
               >
                 <div>
-                  <h3 className="font-medium">
-                  {candidate.name}역
-                  </h3>
+                  <h3 className="font-medium">{candidate.name}역</h3>
                   <p className="mt-1 text-sm text-muted-foreground">
                     {candidate.durations
                       .map((minutes, index) =>
@@ -175,7 +166,8 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
                   </p>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  최대 {candidate.worstMinutes}분 · 합계 {candidate.totalMinutes}분
+                  최대 {candidate.worstMinutes}분 · 합계{' '}
+                  {candidate.totalMinutes}분
                 </p>
               </article>
             ))}
