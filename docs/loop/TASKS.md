@@ -26,4 +26,4 @@
 | T2 minimax engine                 | done   | `d98d759`, `c4934fb`, N-origin tests                       |
 | T3 static API                     | done   | `f7e73bf`, external-route mocks removed                    |
 | T4 meeting UI                     | done   | `5353880`, `4284de5`, static results and multi-origin form |
-| T5 removal and final verification | active | No Kakao source/key, full checks, browser evidence         |
+| T5 removal and final verification | done   | `6efccd6`, full checks, browser result evidence            |
