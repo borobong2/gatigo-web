@@ -5,7 +5,7 @@
 - issue: #1
 - active: T5
 - phase: verify
-- next: run final checks and inspect the local screen
+- next: commit verified implementation and record its SHA
 - terminal: false
 
 ## State transitions
@@ -20,10 +20,10 @@
 
 ## Tasks
 
-| ID                                | Status | Completion evidence                                        |
-| --------------------------------- | ------ | ---------------------------------------------------------- |
-| T1 static network data            | done   | `ad1a07b`, source document, positive-edge test             |
-| T2 minimax engine                 | done   | `d98d759`, `c4934fb`, N-origin tests                       |
-| T3 static API                     | done   | `f7e73bf`, external-route mocks removed                    |
-| T4 meeting UI                     | done   | `5353880`, `4284de5`, static results and multi-origin form |
-| T5 removal and final verification | done   | `6efccd6`, full checks, browser result evidence            |
+| ID                                | Status | Completion evidence                                      |
+| --------------------------------- | ------ | -------------------------------------------------------- |
+| T1 static network data            | done   | generator, source document, coverage test                |
+| T2 minimax engine                 | done   | N-origin, tie-break, and transfer tests                  |
+| T3 static API                     | done   | local graph, duplicate and request-limit tests           |
+| T4 meeting UI                     | done   | serialized N-origin input, add/remove, localized results |
+| T5 removal and final verification | verify | dead code removed; commit SHA pending                    |

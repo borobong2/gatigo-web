@@ -9,16 +9,21 @@ const request = (body: unknown) =>
 
 describe('POST /api/meeting-suggestions', () => {
   it('returns three static candidates without an external route request', async () => {
-    const response = await POST(
-      request({ originNames: ['강남역', '홍대입구역'] }),
-    );
+    const response = await POST(request({ originIds: ['강남', '홍대입구'] }));
 
     expect(response.status).toBe(200);
     expect((await response.json()).candidates).toHaveLength(3);
   });
 
-  it.each([{}, { originNames: ['강남역'] }, { originNames: ['강남역', '없는역'] }])(
+  it.each([{}, { originIds: ['강남'] }, { originIds: ['강남', '없는역'] }])(
     'returns 400 for invalid origins: %j',
     async (body) => expect((await POST(request(body))).status).toBe(400),
   );
+
+  it.each([
+    { originIds: ['강남', '강남'] },
+    { originIds: Array.from({ length: 11 }, (_, index) => `${index}역`) },
+  ])('returns 400 for duplicate or excessive origins: %j', async (body) => {
+    expect((await POST(request(body))).status).toBe(400);
+  });
 });

@@ -15,6 +15,8 @@ pnpm dev
 
 Meeting recommendations use the bundled static capital-area rail network.
 They make no runtime external API calls and require no API key.
+The source and regeneration command are documented in
+[`docs/loop/STATIC-NETWORK.md`](docs/loop/STATIC-NETWORK.md).
 
 ## Repository
 

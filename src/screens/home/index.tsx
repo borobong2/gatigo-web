@@ -1,11 +1,11 @@
 import LocaleSwitcher from '@/components/locale-switcher';
-import { staticStationNames } from '@/lib/subway/static-recommendations';
+import { staticStationOptions } from '@/lib/subway/static-recommendations';
 import MeetingForm from './_components/meeting-form';
 
 const HomeScreen = async () => {
-  const stationOptions = staticStationNames.map((name) => ({
-    id: name,
-    name: `${name}역`,
+  const stationOptions = staticStationOptions.map(({ displayName, id }) => ({
+    id,
+    name: displayName,
   }));
 
   return (

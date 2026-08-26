@@ -4,9 +4,18 @@ import { useRef, useState, type FormEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { resolveStationId, type StationOption } from '../_constants/stations';
+import { MAX_ORIGINS } from '@/lib/subway/constants';
+import {
+  addOrigin,
+  candidateDisplayData,
+  removeOrigin,
+  toOriginIds,
+  type StationOption,
+} from '../_constants/stations';
 
 type Candidate = {
+  displayName: string;
+  id: string;
   name: string;
   durations: number[];
   worstMinutes: number;
@@ -26,16 +35,21 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const requestRef = useRef<AbortController | null>(null);
 
-  const updateSelection = (value: string, index: number) => {
+  const updateOrigins = (next: (current: string[]) => string[]) => {
     requestRef.current?.abort();
     requestRef.current = null;
-    setOrigins((current) =>
-      current.map((origin, i) => (i === index ? value : origin)),
-    );
+    setOrigins(next);
     setCandidates([]);
     setError('');
     setIsLoading(false);
   };
+
+  const updateSelection = (value: string, index: number) =>
+    updateOrigins((current) =>
+      current.map((origin, currentIndex) =>
+        currentIndex === index ? value : origin,
+      ),
+    );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,14 +58,10 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
     setCandidates([]);
     setError('');
 
-    const originNames = origins.map(
-      (origin) => resolveStationId(origin, stationOptions) ?? '',
-    );
-    if (
-      originNames.length < 2 ||
-      originNames.some((name) => !name) ||
-      new Set(originNames).size !== originNames.length
-    ) {
+    let originIds: string[];
+    try {
+      originIds = toOriginIds(origins, stationOptions);
+    } catch {
       setIsLoading(false);
       setError(t('errors.invalidOrigins'));
       return;
@@ -62,7 +72,7 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/meeting-suggestions', {
-        body: JSON.stringify({ originNames }),
+        body: JSON.stringify({ originIds }),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         signal: controller.signal,
@@ -102,34 +112,44 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
       </div>
       <form className="mt-8 grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
         {origins.map((origin, index) => (
-          <label
-            className="grid gap-2 text-sm font-medium"
-            htmlFor={`station-${index}`}
-            key={`origin-${index}`}
-          >
-            {index === 0
-              ? t('firstOrigin')
-              : index === 1
-                ? t('secondOrigin')
-                : `${index + 1}번째 사람 출발역`}
-            <Input
-              autoComplete="off"
-              id={`station-${index}`}
-              list="station-options"
-              onChange={(event) => updateSelection(event.target.value, index)}
-              placeholder={t('searchPlaceholder')}
-              required
-              type="search"
-              value={origin}
-            />
-          </label>
+          <div className="grid gap-2" key={`origin-${index}`}>
+            <label
+              className="grid gap-2 text-sm font-medium"
+              htmlFor={`station-${index}`}
+            >
+              {t('originLabel', { person: index + 1 })}
+              <Input
+                autoComplete="off"
+                id={`station-${index}`}
+                list="station-options"
+                onChange={(event) => updateSelection(event.target.value, index)}
+                placeholder={t('searchPlaceholder')}
+                required
+                type="search"
+                value={origin}
+              />
+            </label>
+            {origins.length > 2 && (
+              <Button
+                aria-label={t('removePerson', { person: index + 1 })}
+                onClick={() =>
+                  updateOrigins((current) => removeOrigin(current, index))
+                }
+                type="button"
+                variant="outline"
+              >
+                {t('remove')}
+              </Button>
+            )}
+          </div>
         ))}
         <Button
           className="sm:col-span-2"
-          onClick={() => setOrigins((current) => [...current, ''])}
+          disabled={origins.length >= MAX_ORIGINS}
+          onClick={() => updateOrigins(addOrigin)}
           type="button"
         >
-          사람 추가
+          {t('addPerson')}
         </Button>
         <datalist id="station-options">
           {stationOptions.map((station) => (
@@ -151,27 +171,35 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
             {t('suggestionsTitle')}
           </h2>
           <div className="mt-3 grid gap-3">
-            {candidates.map((candidate) => (
-              <article
-                className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border p-4"
-                key={candidate.name}
-              >
-                <div>
-                  <h3 className="font-medium">{candidate.name}역</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {candidate.durations
-                      .map((minutes, index) =>
-                        t('duration', { minutes, person: index + 1 }),
-                      )
-                      .join(' · ')}
-                  </p>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  최대 {candidate.worstMinutes}분 · 합계{' '}
-                  {candidate.totalMinutes}분
-                </p>
-              </article>
-            ))}
+            {candidates.map((candidate) => {
+              const display = candidateDisplayData(candidate);
+              return (
+                <article
+                  className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border p-4"
+                  key={candidate.id}
+                >
+                  <div>
+                    <h3 className="font-medium">{display.displayName}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {display.durations
+                        .map(({ minutes, person }) =>
+                          t('duration', { minutes, person }),
+                        )
+                        .join(' · ')}
+                    </p>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    <p>
+                      {t('summary', {
+                        total: display.totalMinutes,
+                        worst: display.worstMinutes,
+                      })}
+                    </p>
+                    <p>{t('reason')}</p>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
       )}

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { MAX_ORIGINS, MIN_ORIGINS } from '../../../lib/subway/constants';
 import { recommendStaticMeetingStations } from '../../../lib/subway/static-recommendations';
 
 const badRequest = () =>
@@ -12,20 +13,27 @@ export const POST = async (request: Request) => {
     return badRequest();
   }
 
-  const originNames =
-    typeof body === 'object' && body !== null && 'originNames' in body
-      ? body.originNames
+  const originIds =
+    typeof body === 'object' && body !== null && 'originIds' in body
+      ? body.originIds
       : undefined;
   if (
-    !Array.isArray(originNames) ||
-    originNames.length < 2 ||
-    originNames.some((name) => typeof name !== 'string')
+    !Array.isArray(originIds) ||
+    originIds.length < MIN_ORIGINS ||
+    originIds.length > MAX_ORIGINS ||
+    originIds.some((id) => typeof id !== 'string' || !id.trim())
   ) {
     return badRequest();
   }
 
+  if (new Set(originIds).size !== originIds.length) {
+    return NextResponse.json({ error: 'Invalid origins' }, { status: 400 });
+  }
+
   try {
-    return NextResponse.json({ candidates: recommendStaticMeetingStations(originNames) });
+    return NextResponse.json({
+      candidates: recommendStaticMeetingStations(originIds),
+    });
   } catch {
     return badRequest();
   }
