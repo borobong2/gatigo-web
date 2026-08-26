@@ -1,11 +1,12 @@
 {
   "issue": 1,
-  "terminal": false,
+  "terminal": true,
   "tasks": [
     {
       "id": "T1",
       "status": "done",
       "evidence": [
+        "d3a56a9",
         "scripts/generate-static-network.mjs",
         "docs/loop/STATIC-NETWORK.md",
         "src/lib/subway/static-network.test.ts"
@@ -15,6 +16,7 @@
       "id": "T2",
       "status": "done",
       "evidence": [
+        "d3a56a9",
         "src/lib/subway/network.test.ts",
         "src/lib/subway/static-recommendations.test.ts"
       ]
@@ -22,20 +24,22 @@
     {
       "id": "T3",
       "status": "done",
-      "evidence": ["src/app/api/meeting-suggestions/route.test.ts"]
+      "evidence": ["d3a56a9", "src/app/api/meeting-suggestions/route.test.ts"]
     },
     {
       "id": "T4",
       "status": "done",
       "evidence": [
+        "d3a56a9",
         "src/screens/home/_constants/stations.test.ts",
         "src/screens/home/_components/meeting-form.tsx"
       ]
     },
     {
       "id": "T5",
-      "status": "verify",
+      "status": "done",
       "evidence": [
+        "d3a56a9",
         "pnpm test",
         "pnpm lint",
         "pnpm typecheck",

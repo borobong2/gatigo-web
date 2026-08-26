@@ -26,7 +26,7 @@
       정렬을 테스트와 함께 구현한다.
 - [x] 카카오 클라이언트와 런타임 외부 호출을 제거하고, 결과 화면에 정적 예상시간과
       추천 이유를 표시한다.
-- [ ] 전체 검사와 런타임 스모크 확인을 기록하고 `STATE.md`를 완료 상태로 갱신한다.
+- [x] 전체 검사와 런타임 스모크 확인을 기록하고 `STATE.md`를 완료 상태로 갱신한다.
 
 ## Loop task board
 
@@ -36,14 +36,14 @@
   운행시간을 추출해 저장소 데이터로 포함한다. 출처, 라이선스, 기준일, 포함·제외
   노선을 문서화한다.
 - 검증: 변환된 데이터에 강남역·홍대입구역이 있고, 모든 간선 시간이 양수인 테스트.
-- 증거: `scripts/generate-static-network.mjs`, `static-network.test.ts`
+- 증거: `d3a56a9`, `scripts/generate-static-network.mjs`, `static-network.test.ts`
 
 ### T2: 환승과 N명 minimax 엔진
 
 - 완료 조건: 같은 물리 환승역을 3분 간선으로 연결하고, 두 명 이상 출발역의
   `worst` → `total` 정렬 후보 3개를 계산한다.
 - 검증: 환승 패널티와 동률 정렬을 포함한 단위 테스트.
-- 증거: `network.test.ts`, `static-recommendations.test.ts`
+- 증거: `d3a56a9`, `network.test.ts`, `static-recommendations.test.ts`
 
 ### T3: 정적 추천 API와 카카오 제거
 
@@ -51,20 +51,20 @@
   fetch를 제거한다.
 - 검증: Route Handler 테스트에서 외부 모듈 mock 없이 후보·입력 오류·연결 불가를
   검증한다.
-- 증거: `route.test.ts`, 런타임 외부 `fetch` 없음
+- 증거: `d3a56a9`, `route.test.ts`, 런타임 외부 `fetch` 없음
 
 ### T4: N명 입력과 결과 화면
 
 - 완료 조건: 사용자가 두 명 이상 출발역을 입력·추가·삭제할 수 있고, 후보 카드에
   사람별 정적 예상시간과 추천 이유가 표시된다.
 - 검증: 입력 직렬화와 결과 표시 데이터의 단위 테스트.
-- 증거: `stations.test.ts`, N명 추가·삭제 UI
+- 증거: `d3a56a9`, `stations.test.ts`, N명 추가·삭제 UI
 
 ### T5: 종료 검증
 
 - 완료 조건: 출처 문서, README, STATE, GitHub Issue 진행 기록이 코드와 일치한다.
 - 검증: `pnpm test && pnpm lint && pnpm typecheck && pnpm build`, HTTP 스모크.
-- 증거: `pnpm test && pnpm lint && pnpm typecheck && pnpm build`, HTTP 스모크
+- 증거: `d3a56a9`, `pnpm test && pnpm lint && pnpm typecheck && pnpm build`, HTTP 스모크
 
 > Source selected: 국가철도공단 `국가철도공단_도시광역철도_운행정보_20260630`
 > (전체 도시광역철도 운행기관, 이용허락범위 제한 없음)을 정규화한다. 원본의
