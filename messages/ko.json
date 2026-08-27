@@ -16,34 +16,21 @@
     "title": "우리, 어디서 만나는 게 가장 공평할까?"
   },
   "Meeting": {
+    "addPerson": "사람 추가",
     "duration": "{person}번째 사람 {minutes}분",
     "errors": {
       "generic": "추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
-      "invalidOrigins": "서로 다른 출발역 두 곳을 목록에서 선택해 주세요.",
-      "rateLimited": "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
-      "upstream": "대중교통 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."
+      "invalidOrigins": "서로 다른 출발역을 두 곳 이상 목록에서 선택해 주세요."
     },
-    "firstOrigin": "첫 번째 사람 출발역",
     "loading": "추천 찾는 중…",
-    "mapLink": "카카오맵에서 길찾기",
+    "originLabel": "{person}번째 사람 출발역",
+    "reason": "가장 오래 걸리는 사람의 이동 시간을 우선으로 줄인 순위예요.",
+    "remove": "삭제",
+    "removePerson": "{person}번째 사람 삭제",
     "searchPlaceholder": "역 이름 검색",
-    "secondOrigin": "두 번째 사람 출발역",
-    "stations": {
-      "city-hall": "시청역",
-      "euljiro-3ga": "을지로3가역",
-      "express-bus-terminal": "고속터미널역",
-      "gangnam": "강남역",
-      "hongik-university": "홍대입구역",
-      "jamsil": "잠실역",
-      "konkuk-university": "건대입구역",
-      "sadang": "사당역",
-      "seoul": "서울역",
-      "sindorim": "신도림역",
-      "wangsimni": "왕십리역",
-      "yeouido": "여의도역"
-    },
     "submit": "만남역 추천받기",
-    "subtitle": "두 사람의 출발역을 고르면 중간 만남역을 추천해 드릴게요.",
+    "subtitle": "두 명 이상의 출발역을 고르면 공평한 만남역을 추천해 드릴게요.",
+    "summary": "최대 {worst}분 · 합계 {total}분",
     "suggestionsTitle": "추천 만남역",
     "title": "어디서 만날까요?"
   },

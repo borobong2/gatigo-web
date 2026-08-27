@@ -16,34 +16,21 @@
     "title": "Where should everyone meet fairly?"
   },
   "Meeting": {
+    "addPerson": "Add person",
     "duration": "Person {person}: {minutes} min",
     "errors": {
       "generic": "Could not load suggestions. Please try again shortly.",
-      "invalidOrigins": "Choose two different departure stations from the list.",
-      "rateLimited": "Too many requests. Please try again shortly.",
-      "upstream": "Could not load transit information. Please try again shortly."
+      "invalidOrigins": "Choose at least two different departure stations from the list."
     },
-    "firstOrigin": "First person's departure",
     "loading": "Finding suggestions…",
-    "mapLink": "Open directions in Kakao Map",
+    "originLabel": "Person {person}'s departure",
+    "reason": "Ranked to minimize the longest individual journey first.",
+    "remove": "Remove",
+    "removePerson": "Remove person {person}",
     "searchPlaceholder": "Search station names",
-    "secondOrigin": "Second person's departure",
-    "stations": {
-      "city-hall": "City Hall Station",
-      "euljiro-3ga": "Euljiro 3-ga Station",
-      "express-bus-terminal": "Express Bus Terminal Station",
-      "gangnam": "Gangnam Station",
-      "hongik-university": "Hongik University Station",
-      "jamsil": "Jamsil Station",
-      "konkuk-university": "Konkuk University Station",
-      "sadang": "Sadang Station",
-      "seoul": "Seoul Station",
-      "sindorim": "Sindorim Station",
-      "wangsimni": "Wangsimni Station",
-      "yeouido": "Yeouido Station"
-    },
     "submit": "Suggest meeting stations",
-    "subtitle": "Choose two departure stations and we'll suggest fair places to meet.",
+    "subtitle": "Choose departure stations for at least two people and we'll suggest fair places to meet.",
+    "summary": "Longest {worst} min · Total {total} min",
     "suggestionsTitle": "Suggested meeting stations",
     "title": "Where should we meet?"
   },
