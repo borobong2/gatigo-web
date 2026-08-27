@@ -115,4 +115,31 @@ describe('static metropolitan network data', () => {
       expect.arrayContaining(['동대문', '종로3가', '청량리', '서울', '능길']),
     );
   });
+
+  it('does not turn corrupted or skip-stop rows into track adjacency', () => {
+    expect(STATIC_NETWORK['서울 도시철도 1호선|구일']).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ to: '서울 도시철도 1호선|도원' }),
+      ]),
+    );
+    expect(STATIC_NETWORK['서울 도시철도 1호선|송내']).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ to: '서울 도시철도 1호선|부평' }),
+      ]),
+    );
+    expect(STATIC_NETWORK['서울 도시철도 1호선|주안']).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ to: '서울 도시철도 1호선|동인천' }),
+      ]),
+    );
+    expect(
+      Math.max(
+        ...Object.entries(STATIC_NETWORK).map(
+          ([id, edges]) =>
+            edges.filter(({ to }) => to.split('|')[0] === id.split('|')[0])
+              .length,
+        ),
+      ),
+    ).toBeLessThanOrEqual(3);
+  });
 });

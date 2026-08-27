@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { MAX_ORIGINS, MIN_ORIGINS } from '../../../lib/subway/constants';
-import { recommendStaticMeetingStations } from '../../../lib/subway/static-recommendations';
+import {
+  recommendStaticMeetingStations,
+  resolveStaticStationId,
+  type StaticLocale,
+} from '../../../lib/subway/static-recommendations';
 
 const badRequest = () =>
   NextResponse.json({ error: 'Invalid origin names' }, { status: 400 });
@@ -26,15 +30,25 @@ export const POST = async (request: Request) => {
     return badRequest();
   }
 
-  if (new Set(originIds).size !== originIds.length) {
+  const canonicalOriginIds = originIds.map(resolveStaticStationId);
+  if (
+    canonicalOriginIds.some((id) => !id) ||
+    new Set(canonicalOriginIds).size !== canonicalOriginIds.length
+  ) {
     return NextResponse.json({ error: 'Invalid origins' }, { status: 400 });
   }
 
-  try {
-    return NextResponse.json({
-      candidates: recommendStaticMeetingStations(originIds),
-    });
-  } catch {
-    return badRequest();
-  }
+  const locale: StaticLocale =
+    typeof body === 'object' &&
+    body !== null &&
+    'locale' in body &&
+    body.locale === 'en'
+      ? 'en'
+      : 'ko';
+  return NextResponse.json({
+    candidates: recommendStaticMeetingStations(
+      canonicalOriginIds as string[],
+      locale,
+    ),
+  });
 };

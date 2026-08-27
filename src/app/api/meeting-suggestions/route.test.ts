@@ -22,8 +22,23 @@ describe('POST /api/meeting-suggestions', () => {
 
   it.each([
     { originIds: ['강남', '강남'] },
+    { originIds: ['강남', '강남역'] },
     { originIds: Array.from({ length: 11 }, (_, index) => `${index}역`) },
   ])('returns 400 for duplicate or excessive origins: %j', async (body) => {
     expect((await POST(request(body))).status).toBe(400);
+  });
+
+  it('returns English candidate names for the English route', async () => {
+    const response = await POST(
+      request({ locale: 'en', originIds: ['강남', '홍대입구'] }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(
+      (await response.json()).candidates.every(
+        ({ displayName }: { displayName: string }) =>
+          / Station/.test(displayName),
+      ),
+    ).toBe(true);
   });
 });

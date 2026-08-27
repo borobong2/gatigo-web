@@ -7,8 +7,9 @@ Station names and physical transfer identities come from the companion
 `전체_도시철도역사정보_20260630.xlsx` dataset.
 
 - Runtime use: bundled TypeScript data only; no external request or API key.
-- Edge time: median scheduled minutes between consecutive stations on regular
-  services.
+- Edge time: median scheduled minutes between physical adjacent stations on
+  regular services. Source rows that skip or scramble intermediate stops are
+  filtered with the companion station coordinates before edges are emitted.
 - Missing time fallback: lines whose source rows contain station order but no
   per-station time use 2 minutes per adjacent stop.
 - Transfer: same-name capital-area line nodes within 1 kilometer in station
@@ -24,6 +25,8 @@ Station names and physical transfer identities come from the companion
   `218f76dd53c4b9e1f248a8e07ab6879763495958714ee377761944e40cd94bc4`.
 - Station metadata SHA-256:
   `cdf1d84a7e5c898b2aacd622783ba8ba9af35c40bee0561dc97d55ce8e063f94`.
+- Localized labels: Korean and English station names come from the companion
+  station metadata and are bundled with the graph.
 
 Regenerate without adding a spreadsheet parser dependency:
 

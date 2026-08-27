@@ -25,6 +25,7 @@ type Candidate = {
 type MeetingFormProps = { stationOptions: readonly StationOption[] };
 
 const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
+  const locale = useLocale();
   const t = useTranslations('Meeting');
   const [origins, setOrigins] = useState([
     stationOptions[0]?.name ?? '',
@@ -72,7 +73,7 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/meeting-suggestions', {
-        body: JSON.stringify({ originIds }),
+        body: JSON.stringify({ locale, originIds }),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         signal: controller.signal,

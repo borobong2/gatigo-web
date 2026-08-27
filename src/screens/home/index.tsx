@@ -1,12 +1,16 @@
+import { getLocale } from 'next-intl/server';
 import LocaleSwitcher from '@/components/locale-switcher';
-import { staticStationOptions } from '@/lib/subway/static-recommendations';
+import {
+  getStaticStationOptions,
+  type StaticLocale,
+} from '@/lib/subway/static-recommendations';
 import MeetingForm from './_components/meeting-form';
 
 const HomeScreen = async () => {
-  const stationOptions = staticStationOptions.map(({ displayName, id }) => ({
-    id,
-    name: displayName,
-  }));
+  const locale = (await getLocale()) as StaticLocale;
+  const stationOptions = getStaticStationOptions(locale).map(
+    ({ displayName, id }) => ({ id, name: displayName }),
+  );
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-3xl px-6 py-12 sm:px-10">
