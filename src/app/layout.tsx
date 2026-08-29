@@ -25,11 +25,11 @@ const RootLayout = async ({
         {analyticsId && (
           <>
             <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(analyticsId)}`}
               strategy="afterInteractive"
             />
             <Script id="google-analytics" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('js',new Date());gtag('config','${analyticsId}');`}
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('js',new Date());gtag('config',${JSON.stringify(analyticsId)});`}
             </Script>
           </>
         )}
