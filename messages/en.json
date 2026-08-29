@@ -17,6 +17,7 @@
   },
   "Meeting": {
     "addPerson": "Add person",
+    "candidateLegend": "Choose one meeting-station candidate",
     "duration": "Person {person}: {minutes} min",
     "errors": {
       "generic": "Could not load suggestions. Please try again shortly.",
@@ -28,6 +29,8 @@
     "remove": "Remove",
     "removePerson": "Remove person {person}",
     "searchPlaceholder": "Search station names",
+    "share": "Share this choice",
+    "shareUnavailable": "Sharing is not available yet. No room or share link was created.",
     "submit": "Suggest meeting stations",
     "subtitle": "Choose departure stations for at least two people and we'll suggest fair places to meet.",
     "summary": "Longest {worst} min · Total {total} min",

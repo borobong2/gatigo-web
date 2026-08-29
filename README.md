@@ -18,6 +18,11 @@ They make no runtime external API calls and require no API key.
 The source and regeneration command are documented in
 [`docs/loop/STATIC-NETWORK.md`](docs/loop/STATIC-NETWORK.md).
 
+Candidate selection and the honest share-intent prompt stay in browser memory.
+To enable activation events, set `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID`; without it,
+analytics is a no-op. The four events contain no station names or other input
+properties.
+
 ## Repository
 
 - [gatigo-mobile](https://github.com/borobong2/gatigo-mobile): React Native

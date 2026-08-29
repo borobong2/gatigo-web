@@ -22,8 +22,9 @@
       "id": "L0",
       "issue": 8,
       "kind": "implementation",
-      "status": "pending",
-      "deps": ["E0"]
+      "status": "done",
+      "deps": ["E0"],
+      "evidence": ["b7c8835", "f193d45", "PR #14", "CI verify"]
     },
     {
       "id": "G0",
