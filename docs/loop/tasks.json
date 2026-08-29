@@ -27,11 +27,18 @@
       "evidence": ["b7c8835", "f193d45", "PR #14", "CI verify"]
     },
     {
+      "id": "A0",
+      "issue": 15,
+      "kind": "investigation",
+      "status": "pending",
+      "deps": ["L0"]
+    },
+    {
       "id": "G0",
       "issue": 9,
       "kind": "gate",
       "status": "pending",
-      "deps": ["L0"]
+      "deps": ["A0"]
     },
     {
       "id": "L1A",
