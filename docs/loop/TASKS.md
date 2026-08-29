@@ -1,29 +1,37 @@
-# Issue #1 Task Queue
+# GatiGo Web Loop Queue
 
 ## Control state
 
-- issue: #1
-- active: none
-- phase: done
-- next: none
-- terminal: true
+- roadmap: GitHub #12
+- active: E0 / GitHub #7
+- ready after E0: L0 / GitHub #8
+- terminal: false
+
+Machine-readable state lives in `docs/loop/tasks.json`.
+
+## Queue
+
+| ID  | Issue | Kind           | Status  | Depends on |
+| --- | ----: | -------------- | ------- | ---------- |
+| H1  |    #1 | history        | done    | -          |
+| E0  |    #7 | environment    | active  | H1         |
+| L0  |    #8 | implementation | pending | E0         |
+| G0  |    #9 | gate           | pending | L0         |
+| L1A |    #2 | implementation | pending | G0         |
+| L1B |    #3 | implementation | pending | L1A        |
+| G1  |   #10 | gate           | pending | L1B        |
+| L2  |    #4 | implementation | pending | G1         |
+| G2  |   #11 | gate           | pending | L2         |
 
 ## State transitions
 
-`pending → active → red → implement → verify → done`
+```text
+pending → active → verify → done
+                 ↘ diagnose ↗
+pending → blocked
+```
 
-- A failed check transitions to `diagnose`, not to the next task.
-- `done` requires the listed verification output and a commit SHA.
-- Only one task may be `active` or `diagnose`.
-- The first non-`done` task becomes active immediately after a successful commit.
-- `blocked` is allowed only for missing authority, unavailable source data, or a license conflict; it must name the exact unblock action.
-
-## Tasks
-
-| ID                                | Status | Completion evidence                                                 |
-| --------------------------------- | ------ | ------------------------------------------------------------------- |
-| T1 static network data            | done   | `d3a56a9`, generator, source document, coverage test                |
-| T2 minimax engine                 | done   | `d3a56a9`, N-origin, tie-break, and transfer tests                  |
-| T3 static API                     | done   | `d3a56a9`, local graph, duplicate and request-limit tests           |
-| T4 meeting UI                     | done   | `d3a56a9`, serialized N-origin input, add/remove, localized results |
-| T5 removal and final verification | done   | `d3a56a9`, dead code removed, full checks and HTTP smoke            |
+- `diagnose` handles ordinary test and implementation failures.
+- `blocked` is only for missing authority, credentials, source data, or license.
+- A gate becomes `done` only after real behavior evidence and a recorded resolution.
+- The coordinator activates every dependency-free implementation task and continues until a gate.
