@@ -27,7 +27,7 @@
 
 ## Runtime
 
-- orca_run: pending creation in Issue #7
-- gate_0: pending creation
-- gate_1: pending creation
-- gate_2: pending creation
+- orca_run: `run_4fbe8ce89af1`
+- gate_0: `gate_3d445b6f5476`
+- gate_1: `gate_9573d1010ce0`
+- gate_2: `gate_016472214b96`
