@@ -4,6 +4,11 @@ import { useRef, useState, type FormEvent } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  trackActivationEvent,
+  trackActivationEventOnce,
+  type ActivationEvent,
+} from '@/lib/analytics';
 import { MAX_ORIGINS } from '@/lib/subway/constants';
 import {
   addOrigin,
@@ -32,15 +37,20 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
     stationOptions[1]?.name ?? '',
   ]);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [selectedCandidateId, setSelectedCandidateId] = useState('');
+  const [showShareNotice, setShowShareNotice] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const requestRef = useRef<AbortController | null>(null);
+  const trackedEventsRef = useRef(new Set<ActivationEvent>());
 
   const updateOrigins = (next: (current: string[]) => string[]) => {
     requestRef.current?.abort();
     requestRef.current = null;
     setOrigins(next);
     setCandidates([]);
+    setSelectedCandidateId('');
+    setShowShareNotice(false);
     setError('');
     setIsLoading(false);
   };
@@ -68,6 +78,8 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
       return;
     }
 
+    trackActivationEventOnce(trackedEventsRef.current, 'meeting_started');
+
     const controller = new AbortController();
     requestRef.current = controller;
     setIsLoading(true);
@@ -85,7 +97,14 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
         throw new Error(t(key));
       }
       const data = (await response.json()) as { candidates: Candidate[] };
-      if (requestRef.current === controller) setCandidates(data.candidates);
+      if (requestRef.current === controller) {
+        trackedEventsRef.current.delete('candidate_selected');
+        trackedEventsRef.current.delete('share_intent_clicked');
+        setCandidates(data.candidates);
+        setSelectedCandidateId('');
+        setShowShareNotice(false);
+        trackActivationEvent('suggestions_generated');
+      }
     } catch (requestError) {
       if (!controller.signal.aborted && requestRef.current === controller) {
         setError(
@@ -171,16 +190,37 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
           <h2 className="text-lg font-semibold" id="suggestions-title">
             {t('suggestionsTitle')}
           </h2>
-          <div className="mt-3 grid gap-3">
+          <fieldset className="mt-3 grid gap-3">
+            <legend className="sr-only">{t('candidateLegend')}</legend>
             {candidates.map((candidate) => {
               const display = candidateDisplayData(candidate);
               return (
                 <article
-                  className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border p-4"
+                  className="grid gap-4 rounded-lg border border-border p-4 sm:grid-cols-[auto_1fr_auto] sm:items-center"
                   key={candidate.id}
                 >
+                  <input
+                    checked={selectedCandidateId === candidate.id}
+                    className="h-4 w-4 accent-primary"
+                    id={`candidate-${candidate.id}`}
+                    name="candidate"
+                    onChange={() => {
+                      setSelectedCandidateId(candidate.id);
+                      setShowShareNotice(false);
+                      trackActivationEventOnce(
+                        trackedEventsRef.current,
+                        'candidate_selected',
+                      );
+                    }}
+                    type="radio"
+                    value={candidate.id}
+                  />
                   <div>
-                    <h3 className="font-medium">{display.displayName}</h3>
+                    <h3 className="font-medium">
+                      <label htmlFor={`candidate-${candidate.id}`}>
+                        {display.displayName}
+                      </label>
+                    </h3>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {display.durations
                         .map(({ minutes, person }) =>
@@ -201,7 +241,28 @@ const MeetingFormFields = ({ stationOptions }: MeetingFormProps) => {
                 </article>
               );
             })}
-          </div>
+          </fieldset>
+          {selectedCandidateId && (
+            <div className="mt-4 rounded-lg border border-border p-4">
+              <Button
+                onClick={() => {
+                  trackActivationEventOnce(
+                    trackedEventsRef.current,
+                    'share_intent_clicked',
+                  );
+                  setShowShareNotice(true);
+                }}
+                type="button"
+              >
+                {t('share')}
+              </Button>
+              {showShareNotice && (
+                <p aria-live="polite" className="mt-3 text-sm" role="status">
+                  {t('shareUnavailable')}
+                </p>
+              )}
+            </div>
+          )}
         </section>
       )}
     </section>

@@ -17,6 +17,7 @@
   },
   "Meeting": {
     "addPerson": "사람 추가",
+    "candidateLegend": "만남역 후보 한 곳 선택",
     "duration": "{person}번째 사람 {minutes}분",
     "errors": {
       "generic": "추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
@@ -28,6 +29,8 @@
     "remove": "삭제",
     "removePerson": "{person}번째 사람 삭제",
     "searchPlaceholder": "역 이름 검색",
+    "share": "이 선택 공유하기",
+    "shareUnavailable": "아직 공유 기능은 제공되지 않아요. 모임방이나 공유 링크는 생성되지 않았습니다.",
     "submit": "만남역 추천받기",
     "subtitle": "두 명 이상의 출발역을 고르면 공평한 만남역을 추천해 드릴게요.",
     "summary": "최대 {worst}분 · 합계 {total}분",
