@@ -3,8 +3,8 @@
 ## Control state
 
 - roadmap: GitHub #12
-- active: E0 / GitHub #7
-- ready after E0: L0 / GitHub #8
+- active: none
+- ready: L0 / GitHub #8
 - terminal: false
 
 Machine-readable state lives in `docs/loop/tasks.json`.
@@ -14,7 +14,7 @@ Machine-readable state lives in `docs/loop/tasks.json`.
 | ID  | Issue | Kind           | Status  | Depends on |
 | --- | ----: | -------------- | ------- | ---------- |
 | H1  |    #1 | history        | done    | -          |
-| E0  |    #7 | environment    | active  | H1         |
+| E0  |    #7 | environment    | done    | H1         |
 | L0  |    #8 | implementation | pending | E0         |
 | G0  |    #9 | gate           | pending | L0         |
 | L1A |    #2 | implementation | pending | G0         |

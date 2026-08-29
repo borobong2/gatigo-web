@@ -14,8 +14,9 @@
       "id": "E0",
       "issue": 7,
       "kind": "environment",
-      "status": "active",
-      "deps": ["H1"]
+      "status": "done",
+      "deps": ["H1"],
+      "evidence": ["bed68db", "ddec171", "1709e10"]
     },
     {
       "id": "L0",

@@ -4,8 +4,8 @@
 
 - roadmap: GitHub #12
 - branch: `feat/issue-7`
-- active: GitHub #7 loop environment
-- next after completion: GitHub #8 activation/share-intent experiment
+- completed: GitHub #7 loop environment
+- ready: GitHub #8 activation/share-intent experiment
 - first decision gate: GitHub #9
 - deployment: not configured; the README URL returns `DEPLOYMENT_NOT_FOUND`
 - baseline: test, lint, typecheck, build pass; format is repaired in #7
