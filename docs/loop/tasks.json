@@ -1,51 +1,71 @@
 {
-  "issue": 1,
-  "terminal": true,
+  "roadmapIssue": 12,
+  "terminal": false,
   "tasks": [
     {
-      "id": "T1",
+      "id": "H1",
+      "issue": 1,
+      "kind": "history",
       "status": "done",
-      "evidence": [
-        "d3a56a9",
-        "scripts/generate-static-network.mjs",
-        "docs/loop/STATIC-NETWORK.md",
-        "src/lib/subway/static-network.test.ts"
-      ]
+      "deps": [],
+      "evidence": ["c69cb92", "d3a56a9"]
     },
     {
-      "id": "T2",
+      "id": "E0",
+      "issue": 7,
+      "kind": "environment",
       "status": "done",
-      "evidence": [
-        "d3a56a9",
-        "src/lib/subway/network.test.ts",
-        "src/lib/subway/static-recommendations.test.ts"
-      ]
+      "deps": ["H1"],
+      "evidence": ["bed68db", "ddec171", "1709e10"]
     },
     {
-      "id": "T3",
-      "status": "done",
-      "evidence": ["d3a56a9", "src/app/api/meeting-suggestions/route.test.ts"]
+      "id": "L0",
+      "issue": 8,
+      "kind": "implementation",
+      "status": "pending",
+      "deps": ["E0"]
     },
     {
-      "id": "T4",
-      "status": "done",
-      "evidence": [
-        "d3a56a9",
-        "src/screens/home/_constants/stations.test.ts",
-        "src/screens/home/_components/meeting-form.tsx"
-      ]
+      "id": "G0",
+      "issue": 9,
+      "kind": "gate",
+      "status": "pending",
+      "deps": ["L0"]
     },
     {
-      "id": "T5",
-      "status": "done",
-      "evidence": [
-        "d3a56a9",
-        "pnpm test",
-        "pnpm lint",
-        "pnpm typecheck",
-        "pnpm build",
-        "HTTP smoke: 서울역·샛강역 및 강남역·홍대입구역 추천 결과 확인"
-      ]
+      "id": "L1A",
+      "issue": 2,
+      "kind": "implementation",
+      "status": "pending",
+      "deps": ["G0"]
+    },
+    {
+      "id": "L1B",
+      "issue": 3,
+      "kind": "implementation",
+      "status": "pending",
+      "deps": ["L1A"]
+    },
+    {
+      "id": "G1",
+      "issue": 10,
+      "kind": "gate",
+      "status": "pending",
+      "deps": ["L1B"]
+    },
+    {
+      "id": "L2",
+      "issue": 4,
+      "kind": "implementation",
+      "status": "pending",
+      "deps": ["G1"]
+    },
+    {
+      "id": "G2",
+      "issue": 11,
+      "kind": "gate",
+      "status": "pending",
+      "deps": ["L2"]
     }
   ]
 }

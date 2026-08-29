@@ -35,3 +35,10 @@ pnpm typecheck
 pnpm format:check
 pnpm build
 ```
+
+## Loop Engineering
+
+- Product roadmap: [`docs/loop/ROADMAP.md`](docs/loop/ROADMAP.md)
+- Current state: [`docs/loop/STATE.md`](docs/loop/STATE.md)
+- Main-agent runbook: [`docs/runbooks/gatigo-loop-execution.md`](docs/runbooks/gatigo-loop-execution.md)
+- GitHub roadmap: [Issue #12](https://github.com/borobong2/gatigo-web/issues/12)
