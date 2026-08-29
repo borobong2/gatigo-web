@@ -18,6 +18,7 @@
 
 ## Verification
 
+- PR #14: coordinator diff review complete; GitHub CI `verify` passed.
 - `pnpm test`: 10 files, 42 tests passed.
 - `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, and `pnpm build`: passed.
 - Desktop browser: generated three candidates, selected by keyboard, activated

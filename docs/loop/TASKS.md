@@ -4,7 +4,7 @@
 
 - roadmap: GitHub #12
 - active: none
-- ready: L0 / GitHub #8
+- ready: G0 / GitHub #9 behavior gate
 - terminal: false
 
 Machine-readable state lives in `docs/loop/tasks.json`.
@@ -15,13 +15,16 @@ Machine-readable state lives in `docs/loop/tasks.json`.
 | --- | ----: | -------------- | ------- | ---------- |
 | H1  |    #1 | history        | done    | -          |
 | E0  |    #7 | environment    | done    | H1         |
-| L0  |    #8 | implementation | pending | E0         |
+| L0  |    #8 | implementation | done    | E0         |
 | G0  |    #9 | gate           | pending | L0         |
 | L1A |    #2 | implementation | pending | G0         |
 | L1B |    #3 | implementation | pending | L1A        |
 | G1  |   #10 | gate           | pending | L1B        |
 | L2  |    #4 | implementation | pending | G1         |
 | G2  |   #11 | gate           | pending | L2         |
+
+G0 requires an approved production deployment, analytics credentials, and real
+non-team traffic. Do not resolve it or start L1A without that evidence.
 
 ## State transitions
 
