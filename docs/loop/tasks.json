@@ -30,14 +30,19 @@
       "id": "A0",
       "issue": 15,
       "kind": "investigation",
-      "status": "pending",
-      "deps": ["L0"]
+      "status": "done",
+      "deps": ["L0"],
+      "evidence": [
+        "docs/issues/15-travel-time-accuracy.md",
+        "12-route benchmark",
+        "static-calibration follow-up draft"
+      ]
     },
     {
       "id": "G0",
       "issue": 9,
       "kind": "gate",
-      "status": "pending",
+      "status": "blocked",
       "deps": ["A0"]
     },
     {
