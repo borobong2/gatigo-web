@@ -5,7 +5,7 @@
 - roadmap: GitHub #12
 - branch: `feat/issue-15`
 - completed: GitHub #8 merged in PR #14 and deployed with GA4; GitHub #15 investigation completed locally
-- ready: none; the bounded static-calibration follow-up draft in #15 needs approval and an issue
+- ready: GitHub #16 bounded static-calibration correction after #15 merges
 - first decision gate: GitHub #9, blocked until the approved correction is implemented
 - deployment: `https://gatigo.justrunlab.com` is verified on Vercel
 - baseline: 12-route accuracy MAE 8.5 minutes; 42 tests, lint, typecheck, format, and build pass
@@ -19,7 +19,7 @@
 - Human feedback GATIGO-WEB-002 routed to GitHub #15 before Gate 0.
 - Issue #15 reproduced `신대방삼거리 → 당산` as 13 static minutes versus a
   22:10 timetable journey (23 minutes rounded), benchmarked 12 routes, and drafted one
-  bounded static-calibration follow-up in `docs/issues/15-travel-time-accuracy.md`.
+  bounded static-calibration follow-up in GitHub #16.
 - Static network implementation evidence is retained in `docs/issues/1-station-ranking.md`
   and `docs/loop/STATIC-NETWORK.md`.
 - Historical Orca Run `run_7240ae5216eb` mixed web and mobile work; do not resume it for

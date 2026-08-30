@@ -39,11 +39,18 @@
       ]
     },
     {
+      "id": "C0",
+      "issue": 16,
+      "kind": "implementation",
+      "status": "pending",
+      "deps": ["A0"]
+    },
+    {
       "id": "G0",
       "issue": 9,
       "kind": "gate",
       "status": "blocked",
-      "deps": ["A0"]
+      "deps": ["C0"]
     },
     {
       "id": "L1A",
