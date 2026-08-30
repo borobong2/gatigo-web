@@ -27,11 +27,32 @@
       "evidence": ["b7c8835", "f193d45", "PR #14", "CI verify"]
     },
     {
+      "id": "A0",
+      "issue": 15,
+      "kind": "investigation",
+      "status": "done",
+      "deps": ["L0"],
+      "evidence": [
+        "81421bc",
+        "PR #17",
+        "docs/issues/15-travel-time-accuracy.md",
+        "12-route benchmark",
+        "GitHub #16"
+      ]
+    },
+    {
+      "id": "C0",
+      "issue": 16,
+      "kind": "implementation",
+      "status": "pending",
+      "deps": ["A0"]
+    },
+    {
       "id": "G0",
       "issue": 9,
       "kind": "gate",
-      "status": "pending",
-      "deps": ["L0"]
+      "status": "blocked",
+      "deps": ["C0"]
     },
     {
       "id": "L1A",
