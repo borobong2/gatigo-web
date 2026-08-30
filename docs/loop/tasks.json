@@ -33,9 +33,11 @@
       "status": "done",
       "deps": ["L0"],
       "evidence": [
+        "81421bc",
+        "PR #17",
         "docs/issues/15-travel-time-accuracy.md",
         "12-route benchmark",
-        "static-calibration follow-up draft"
+        "GitHub #16"
       ]
     },
     {

@@ -4,7 +4,7 @@
 
 - roadmap: GitHub #12
 - branch: `feat/issue-15`
-- completed: GitHub #8 merged in PR #14 and deployed with GA4; GitHub #15 investigation completed locally
+- completed: GitHub #8 merged in PR #14 and deployed with GA4; GitHub #15 investigation ready in PR #17 with green CI
 - ready: GitHub #16 bounded static-calibration correction after #15 merges
 - first decision gate: GitHub #9, blocked until the approved correction is implemented
 - deployment: `https://gatigo.justrunlab.com` is verified on Vercel
